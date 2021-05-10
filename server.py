@@ -24,8 +24,8 @@ MIN_BALANCE = 20.0
 @app.route('/login',methods=['GET','POST'])
 def login():
     global userID
-    # if request.method == 'GET':
-    #     return 'Not supported', 401
+    if request.method == 'GET':
+        return 'Not supported', 401
     ph = request.form['mobile']
     x = userTable.find_one({"_id": ph})
     if x is None:

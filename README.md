@@ -7,7 +7,8 @@
 
 ## Installation
 
-- Install the APK in the repository.
+- Install the APK in the repository on your mobile.
 - Connect your mobile and the computer running the Flask server to the same network.
 - Get the network address of the computer using `ifconfig`.
 - Replace the network address in the first screen of the app.
+- Run server by `./server.py` (only for POSIX systems).
