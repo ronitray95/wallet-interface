@@ -5,6 +5,7 @@
 from flask import *
 from pymongo import *
 import datetime
+from bson.json_util import dumps
 
 client = MongoClient("mongodb+srv://admin:admin123@cluster0.ze4na.mongodb.net")
 db = client['wallet']
@@ -43,8 +44,8 @@ def debit():
     x = userTable.find_one({"_id": ph})
     totalAmt = float(x['balance']) + float(amt)
     userTable.update_one({"_id": ph}, {"$set": {"balance": totalAmt}})
-    transactTable.insert_one({'_id': datetime.datetime.utcnow(
-    ), 'type': 'Credit', 'amount': amt, 'userID': ph})
+    transactTable.insert_one({'_id': str(datetime.datetime.now(
+    ).strftime('%c')), 'type': 'Credit', 'amount': amt, 'userID': ph})
     return {'data': 1}, 200
 
 
@@ -60,8 +61,8 @@ def credit():
     if totalAmt < MIN_BALANCE:
         return {'data': 0}, 200
     userTable.update_one({"_id": ph}, {"$set": {"balance": totalAmt}})
-    transactTable.insert_one({'_id': datetime.datetime.utcnow(
-    ), 'type': 'Debit', 'amount': amt, 'userID': ph})
+    transactTable.insert_one({'_id': str(datetime.datetime.now(
+    ).strftime('%c')), 'type': 'Debit', 'amount': amt, 'userID': ph})
     return {'data': 1}, 200
 
 
@@ -72,6 +73,20 @@ def currBal():
     ph = request.form['mobile']
     x = userTable.find_one({"_id": ph})
     return {'data': float(x['balance'])}, 200
+
+@app.route('/list',methods=['GET','POST'])
+def listAll():
+    if request.method == 'GET':
+        return 'Not supported', 401
+    ph = request.form['mobile']
+    x = transactTable.find({"userID": ph})
+    l=list(x)
+    # data =[]
+    # for d in x:
+    #     print(d)
+    #     data.append({d})
+    # print(data)
+    return dumps(l), 200
 
 
 @app.route('/',methods=['GET','POST'])

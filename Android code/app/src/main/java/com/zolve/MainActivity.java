@@ -1,6 +1,7 @@
 package com.zolve;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button debit;
     Button refresh;
     Button logout;
+    Button listAll;
     private RequestQueue requestQueue;
 
     @Override
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         credit = findViewById(R.id.creditAmt);
         debit = findViewById(R.id.debitAmt);
         logout = findViewById(R.id.logout);
+        listAll = findViewById(R.id.listAll);
         requestQueue = Volley.newRequestQueue(this);
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPrefManager.getInstance(MainActivity.this).logout();
                 finish();
+            }
+        });
+        listAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,TransactionActivity.class));
             }
         });
         credit.setOnClickListener(new View.OnClickListener() {
